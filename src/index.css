@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Default theme colours (consumed by the shared RSVP component through the
+ * Tailwind `cream/blush/green/olive` tokens). The invitation overrides the
+ * gold accents inline; these are the base palette.
+ */
+:root {
+  --color-cream: #F6F4F0;
+  --color-cream-light: #F6F4F0;
+  --color-cream-dark: #F6F4F0;
+
+  --color-blush: #E8A0B5;
+  --color-blush-light: #F0D4DE;
+  --color-blush-dark: #D4789A;
+
+  --color-magenta: #CF43A8;
+
+  --color-green: #508330;
+
+  --color-olive: #111827;
+  --color-olive-light: #111827;
+  --color-olive-muted: #111827;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: #F6F4ED;
+    overflow-x: hidden;
+    @apply font-sans antialiased;
+  }
+}
+
+#root {
+  overflow-x: clip;
+}
+
+/* Confetti celebration animation */
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(100vh) translateX(var(--drift, 0px)) rotate(720deg) scale(0.5); }
+}
+
+@keyframes confettiRise {
+  0% { opacity: 1; transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-100vh) translateX(var(--drift, 0px)) rotate(-720deg) scale(0.5); }
+}
+
+/* Firecracker burst animation */
+@keyframes fireworkLaunch {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: translateY(var(--launch-height, -40vh)) scale(1); }
+}
+
+@keyframes fireworkBurst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  60% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--burst-x), var(--burst-y)) scale(0.2); }
+}
+
+@keyframes fireworkGlow {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.6; }
+}
+
+/* Contact section styling (used by the shared RSVP component) */
+#contact {
+  text-align: center !important;
+}
+#contact .contact-links {
+  flex-direction: column !important;
+}
+@media (min-width: 640px) {
+  #contact .contact-links {
+    flex-direction: row !important;
+  }
+}
