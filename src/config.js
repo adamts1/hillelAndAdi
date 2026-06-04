@@ -4,10 +4,10 @@
  * Only the RSVP image needs a live form overlaid below its baked-in title.
  */
 
-import heroVideo from './assets/hero.mp4'
-import detailsImg from './assets/details.png'
-import rsvpImg from './assets/rsvp.png'
-import bgImg from './assets/background.png'
+import heroVideo from './assets/hero.webm'
+import detailsImg from './assets/details.webp'
+import rsvpImg from './assets/rsvp.webp'
+import bgImg from './assets/background.webp'
 
 const gold = '#9C7C3C'
 const goldDark = '#7E632E'
