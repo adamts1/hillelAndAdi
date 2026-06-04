@@ -65,14 +65,14 @@ export default function App() {
 
       <div className="mx-auto w-full max-w-[480px]">
         {!showDetails ? (
-          <section className="flex h-[100dvh] py-6 px-2.5" style={frameBg}>
-            <div className={`relative flex-1 min-h-0 overflow-hidden ${frameBorder}`}>
+          <section className="flex justify-center h-[100dvh] py-6 px-2.5" style={frameBg}>
+            <div className={`relative h-full aspect-[1170/2532] max-w-full overflow-hidden ${frameBorder}`}>
               <video
                 src={config.videos.heroVideo}
                 autoPlay
                 muted
                 playsInline
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-x-0 top-[44%] z-10 flex justify-center">
                 <button
@@ -90,9 +90,9 @@ export default function App() {
         {showDetails ? (
           <>
             {/* 2. Details – navigation button overlaid below the venue address */}
-            <section id="details" className="design7-enter flex h-[100dvh] py-6 px-2.5" style={frameBg}>
-              <div className={`relative flex-1 min-h-0 overflow-hidden ${frameBorder}`}>
-                <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-contain" />
+            <section id="details" className="design7-enter flex justify-center h-[100dvh] py-6 px-2.5" style={frameBg}>
+              <div className={`relative h-full aspect-[1170/2532] max-w-full overflow-hidden ${frameBorder}`}>
+                <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-x-0 top-[53%] z-10 flex justify-center">
                   <a
                     href={config.navigationUrl}
