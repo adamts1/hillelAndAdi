@@ -149,7 +149,7 @@ export default function App() {
           <>
             {/* 2. Intro – floral wreath blessing, shown before the details. */}
             <section id="intro" className="design7-enter py-6 px-2.5" style={frameBg}>
-              <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
+              <div className="relative w-full aspect-[1170/2532] overflow-hidden">
                 <img src={config.images.introImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </section>
