@@ -16,6 +16,7 @@ const defaultLabels = {
   nameLabel: 'שם מלא *',
   phoneLabel: 'מספר טלפון *',
   messageLabel: 'הודעה לזוג',
+  specialRequestsLabel: 'בקשות מיוחדות',
   submit: 'שליחה',
   submitting: 'שולח...',
   ariaMinus: 'הפחת',
@@ -245,6 +246,7 @@ export default function RSVP({ config = {} }) {
   const [guests, setGuests] = useState([emptyGuest()])
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
+  const [specialRequests, setSpecialRequests] = useState('')
   const [nameErrors, setNameErrors] = useState([''])
   const [phoneError, setPhoneError] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -296,6 +298,7 @@ export default function RSVP({ config = {} }) {
         name: g.name.trim(),
         phone: phone.trim(),
         message: message.trim(),
+        special_requests: specialRequests.trim(),
         lang,
         created_at: new Date().toISOString(),
       }))
@@ -318,6 +321,7 @@ export default function RSVP({ config = {} }) {
             guest_count: String(guests.length),
             guest_list: guestList,
             message: message.trim() || '—',
+            special_requests: specialRequests.trim() || '—',
           },
           import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
         )
@@ -474,6 +478,19 @@ export default function RSVP({ config = {} }) {
               onChange={(e) => setMessage(e.target.value)}
               rows={3}
               className={`${inputBase} resize-y min-h-[80px] md:min-h-[100px]`}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="special-requests" className="block font-sans text-sm font-medium text-olive mb-1">
+              {t.specialRequestsLabel}
+            </label>
+            <input
+              id="special-requests"
+              type="text"
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
+              className={inputBase}
             />
           </div>
 
