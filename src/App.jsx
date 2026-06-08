@@ -25,6 +25,7 @@ export default function App() {
   const [showDetails, setShowDetails] = useState(false)
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const rsvpRef = useRef(null)
+  const rootRef = useRef(null)
 
   // Watch the RSVP section: hide the "scroll down" arrows once it comes into view.
   useEffect(() => {
@@ -51,13 +52,34 @@ export default function App() {
     `&location=${encodeURIComponent('אולם אדמה, הבושם 16, אשדוד')}` +
     '&ctz=Asia/Jerusalem'
 
+  // Custom slow smooth-scroll (native `smooth` speed isn't controllable).
+  const slowScrollTo = (targetTop, duration = 1400) => {
+    const container = rootRef.current
+    if (!container) return
+    const start = container.scrollTop
+    const change = targetTop - start
+    const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t) // easeInOutQuad
+    let startTime = null
+    const step = (now) => {
+      if (startTime === null) startTime = now
+      const progress = Math.min((now - startTime) / duration, 1)
+      container.scrollTop = start + change * ease(progress)
+      if (progress < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }
+
   // Advance one section per press, in document order.
   const scrollToNextSection = () => {
+    const container = rootRef.current
+    if (!container) return
     const ids = ['intro', 'details', 'rsvp']
     for (const id of ids) {
       const el = document.getElementById(id)
       if (el && el.getBoundingClientRect().top > 8) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const targetTop =
+          container.scrollTop + el.getBoundingClientRect().top - container.getBoundingClientRect().top
+        slowScrollTo(targetTop, 1400)
         return
       }
     }
@@ -65,6 +87,7 @@ export default function App() {
 
   return (
     <div
+      ref={rootRef}
       className="design7-root fixed inset-0 overflow-y-auto overscroll-contain bg-cover bg-top"
       style={{
         backgroundColor: config.paperBg,
@@ -95,7 +118,7 @@ export default function App() {
         }
         .design7-enter {
           opacity: 0;
-          animation: design7-enter 0.8s ease-out forwards;
+          animation: design7-enter 1.6s ease-out forwards;
         }
         @media (prefers-reduced-motion: reduce) {
           .design7-enter { animation: none; opacity: 1; }
