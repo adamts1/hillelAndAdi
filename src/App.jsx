@@ -40,18 +40,6 @@ export default function App() {
     return () => observer.disconnect()
   }, [showDetails])
 
-  // Google Calendar "add event" link, built from the config date/venue (Israel time).
-  const calPad = (n) => String(n).padStart(2, '0')
-  const calFmt = (d) =>
-    `${d.getFullYear()}${calPad(d.getMonth() + 1)}${calPad(d.getDate())}T${calPad(d.getHours())}${calPad(d.getMinutes())}00`
-  const calEnd = new Date(config.targetDate.getTime() + 5 * 60 * 60 * 1000)
-  const googleCalUrl =
-    'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-    `&text=${encodeURIComponent('החתונה של הלל ועדי')}` +
-    `&dates=${calFmt(config.targetDate)}/${calFmt(calEnd)}` +
-    `&location=${encodeURIComponent('אולם אדמה, הבושם 16, אשדוד')}` +
-    '&ctz=Asia/Jerusalem'
-
   // Custom slow smooth-scroll (native `smooth` speed isn't controllable).
   const slowScrollTo = (targetTop, duration = 1400) => {
     const container = rootRef.current
@@ -172,7 +160,7 @@ export default function App() {
           <>
             {/* 2. Intro – floral wreath blessing, shown before the details. */}
             <section id="intro" className="design7-enter py-6 px-2.5" style={frameBg}>
-              <div className="relative w-full aspect-[1170/2532] overflow-hidden">
+              <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.introImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </section>
@@ -181,7 +169,7 @@ export default function App() {
             <section id="details" className="design7-enter py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
               <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-x-0 top-[56%] z-10 flex items-center justify-center gap-3">
+                <div className="absolute inset-x-0 top-[60%] z-10 flex items-center justify-center gap-3">
                   <a
                     href={config.navigationUrl}
                     target="_blank"
@@ -191,18 +179,6 @@ export default function App() {
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
-                    </svg>
-                  </a>
-                  <a
-                    href={googleCalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="הוספה ליומן"
-                    className="flex items-center justify-center w-11 h-11 rounded-full border-[3px] border-solid border-[#B1CAA7] bg-white/60 backdrop-blur-md text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <rect x="3" y="4" width="18" height="18" rx="2" />
-                      <path d="M16 2v4M8 2v4M3 10h18" />
                     </svg>
                   </a>
                 </div>
