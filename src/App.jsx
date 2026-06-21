@@ -136,13 +136,7 @@ export default function App() {
         {!showDetails ? (
           <section className="py-6 px-2.5" style={frameBg}>
             <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
-              <video
-                src={config.videos.heroVideo}
-                autoPlay
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
+              <img src={config.images.heroImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-x-0 top-[44%] z-10 flex justify-center">
                 <button
                   type="button"
