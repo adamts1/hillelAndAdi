@@ -56,6 +56,7 @@ export default function App() {
     }
     requestAnimationFrame(step)
   }
+  
 
   // Advance one section per press, in document order.
   const scrollToNextSection = () => {
