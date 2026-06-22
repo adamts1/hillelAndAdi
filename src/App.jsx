@@ -164,7 +164,7 @@ export default function App() {
             <section id="details" className="design7-enter py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
               <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-x-0 top-[60%] z-10 flex items-center justify-center gap-3">
+                <div className="absolute inset-x-0 top-[62%] z-10 flex items-center justify-center gap-3">
                   <a
                     href={config.navigationUrl}
                     target="_blank"
@@ -186,13 +186,12 @@ export default function App() {
                 className={`design7-rsvp overflow-hidden ${frameBorder}`}
                 style={{
                   backgroundColor: config.paperBg,
-                  // Layers top→bottom: rsvpImg (title) anchored to the top,
-                  // rsvpImg2 (flower) anchored to the bottom so it stays visible
-                  // as the card grows with added guests, paper texture filling behind.
-                  backgroundImage: `url(${config.images.rsvpImg}), url(${config.images.rsvpImg2}), url(${config.images.bgImg})`,
-                  backgroundSize: '100% auto, 100% auto, cover',
-                  backgroundPosition: 'top center, bottom center, top center',
-                  backgroundRepeat: 'no-repeat, no-repeat, no-repeat',
+                  // rsvpImg (title) anchored to the top; paper texture fills
+                  // behind as the card grows with added guests.
+                  backgroundImage: `url(${config.images.rsvpImg}), url(${config.images.bgImg})`,
+                  backgroundSize: '100% auto, cover',
+                  backgroundPosition: 'top center, top center',
+                  backgroundRepeat: 'no-repeat, no-repeat',
                 }}
               >
                 {/* pt clears the baked-in title; relative to card width. */}
@@ -201,6 +200,21 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* Credit footer */}
+            <footer className="px-2.5 pb-6 pt-2 text-center" style={frameBg}>
+              <p className="font-serif text-xs text-[#7E632E]/70" dir="ltr">
+                © {config.targetDate.getFullYear()}{' '}
+                <a
+                  href="https://tsityat.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-[#9C7C3C]/40 underline-offset-2 transition-colors hover:text-[#7E632E]"
+                >
+                  TSITYAT - AI Boutique Agency
+                </a>
+              </p>
+            </footer>
           </>
         ) : null}
       </div>

@@ -8,7 +8,6 @@ import heroImg from './assets/hero.webp'
 import introImg from './assets/intro.webp'
 import detailsImg from './assets/details.webp'
 import rsvpImg from './assets/rsvp.webp'
-import rsvpImg2 from './assets/rsvp2.webp'
 import bgImg from './assets/background.webp'
 
 const gold = '#9C7C3C'
@@ -30,7 +29,7 @@ export const config = {
     'https://www.google.com/maps/search/?api=1&query=' +
     encodeURIComponent('אולם אדמה הבושם 16 אשדוד'),
 
-  images: { heroImg, introImg, detailsImg, rsvpImg, rsvpImg2, bgImg },
+  images: { heroImg, introImg, detailsImg, rsvpImg, bgImg },
 
   contacts: [
     { name: 'הלל', phone: '000-0000000', tel: '+0000000000' },
