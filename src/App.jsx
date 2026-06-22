@@ -8,9 +8,12 @@
  *  3. RSVP    – image backdrop; the live form flows below the baked-in title.
  */
 
-import { useState, useEffect, useRef } from 'react'
-import RSVP from './components/RSVP'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import config from './config'
+
+// RSVP pulls in Supabase + EmailJS + confetti; load it as a separate chunk so
+// the cover/hero render fast on a cold load instead of waiting on those libs.
+const RSVP = lazy(() => import('./components/RSVP'))
 
 // Paper-texture frame shown around (outside) each section's border.
 const frameBg = {
@@ -26,6 +29,15 @@ export default function App() {
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const rsvpRef = useRef(null)
   const rootRef = useRef(null)
+
+  // Preload every section image up front so they're cached before the guest
+  // taps "כניסה" — avoids blank cards on a cold (first-visit) load.
+  useEffect(() => {
+    Object.values(config.images).forEach((src) => {
+      const img = new Image()
+      img.src = src
+    })
+  }, [])
 
   // Watch the RSVP section: hide the "scroll down" arrows once it comes into view.
   useEffect(() => {
@@ -137,7 +149,7 @@ export default function App() {
         {!showDetails ? (
           <section className="py-6 px-2.5" style={frameBg}>
             <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
-              <img src={config.images.heroImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              <img src={config.images.heroImg} alt="" fetchPriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-x-0 top-[44%] z-10 flex justify-center">
                 <button
                   type="button"
@@ -196,7 +208,9 @@ export default function App() {
               >
                 {/* pt clears the baked-in title; relative to card width. */}
                 <div className="pt-[34%] pb-10 px-5">
-                  <RSVP config={{ ...config.rsvp }} />
+                  <Suspense fallback={null}>
+                    <RSVP config={{ ...config.rsvp }} />
+                  </Suspense>
                 </div>
               </div>
             </section>
