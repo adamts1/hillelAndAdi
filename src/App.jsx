@@ -9,34 +9,64 @@
  */
 
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
-import config from './config'
+import { translations, defaultLang } from './config'
 
 // RSVP pulls in Supabase + EmailJS + confetti; load it as a separate chunk so
 // the cover/hero render fast on a cold load instead of waiting on those libs.
 const RSVP = lazy(() => import('./components/RSVP'))
 
-// Paper-texture frame shown around (outside) each section's border.
-const frameBg = {
-  backgroundColor: config.paperBg,
-  backgroundImage: `url(${config.images.bgImg})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-}
 const frameBorder = 'border-2 border-[#9C7C3C]/40'
 
+// Open in Hebrew for Hebrew-locale browsers, English for everyone else.
+const detectLang = () => {
+  if (typeof navigator === 'undefined') return defaultLang
+  const langs = navigator.languages || [navigator.language || '']
+  return langs.some((l) => l.toLowerCase().startsWith('he')) ? 'he' : 'en'
+}
+
 export default function App() {
+  const [lang, setLang] = useState(detectLang)
+  const [switching, setSwitching] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const rsvpRef = useRef(null)
   const rootRef = useRef(null)
 
-  // Preload every section image up front so they're cached before the guest
-  // taps "כניסה" — avoids blank cards on a cold (first-visit) load.
+  const config = translations[lang]
+  const t = config.ui
+
+  // Cross-fade on language switch: fade the content out, swap language at
+  // opacity 0 (so the RTL/LTR flip + image change isn't jarring), fade back in.
+  const toggleLang = () => {
+    setSwitching(true)
+    setTimeout(() => {
+      setLang((l) => (l === 'he' ? 'en' : 'he'))
+      setSwitching(false)
+    }, 260)
+  }
+
+  // Paper-texture frame shown around (outside) each section's border.
+  const frameBg = {
+    backgroundColor: config.paperBg,
+    backgroundImage: `url(${config.images.bgImg})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }
+
+  // Keep the document title in sync with the active language.
   useEffect(() => {
-    Object.values(config.images).forEach((src) => {
-      const img = new Image()
-      img.src = src
-    })
+    document.title = config.title
+  }, [config.title])
+
+  // Preload every section image (both languages) up front so they're cached
+  // before the guest taps the entrance button or flips the toggle.
+  useEffect(() => {
+    Object.values(translations).forEach((c) =>
+      Object.values(c.images).forEach((src) => {
+        const img = new Image()
+        img.src = src
+      }),
+    )
   }, [])
 
   // Watch the RSVP section: hide the "scroll down" arrows once it comes into view.
@@ -98,6 +128,16 @@ export default function App() {
       dir={config.dir}
       lang={config.lang}
     >
+      {/* Language toggle – bare flag icon, fixed top-left on every section. */}
+      <button
+        type="button"
+        onClick={toggleLang}
+        aria-label={t.langToggleAria}
+        className="fixed top-4 left-4 z-40 text-2xl leading-none drop-shadow-[0_2px_4px_rgba(124,99,46,0.35)] transition-transform hover:scale-110"
+      >
+        {t.langToggle}
+      </button>
+
       <style>{`
         html, body { overflow: hidden; height: 100%; overscroll-behavior: none; }
         .design7-root .text-olive,
@@ -145,7 +185,10 @@ export default function App() {
         }
       `}</style>
 
-      <div className="mx-auto w-full max-w-[480px]">
+      <div
+        className="mx-auto w-full max-w-[480px]"
+        style={{ opacity: switching ? 0 : 1, transition: 'opacity 260ms ease' }}
+      >
         {!showDetails ? (
           <section className="py-6 px-2.5" style={frameBg}>
             <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
@@ -156,7 +199,7 @@ export default function App() {
                   onClick={() => setShowDetails(true)}
                   className="group flex items-center gap-2 rounded-none border-2 border-[#9C7C3C]/40 bg-[#FCFCFC] px-7 py-3 font-serif text-base tracking-wide text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-[#F2ECDD]"
                 >
-                  כניסה
+                  {t.enter}
                 </button>
               </div>
             </div>
@@ -181,7 +224,7 @@ export default function App() {
                     href={config.navigationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="ניווט לאולם"
+                    aria-label={t.navAria}
                     className="flex items-center justify-center w-11 h-11 rounded-full border-[3px] border-solid border-[#B1CAA7] bg-white/60 backdrop-blur-md text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -238,7 +281,7 @@ export default function App() {
         <button
           type="button"
           onClick={scrollToNextSection}
-          aria-label="לקטע הבא"
+          aria-label={t.nextAria}
           className="design7-arrow-cue fixed bottom-6 left-1/2 -translate-x-1/2 z-30 text-[#75511E]"
         >
           <span className="design7-arrows flex flex-col items-center -space-y-2">
