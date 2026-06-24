@@ -239,7 +239,7 @@ export default function App() {
             <section id="details" className="design7-enter py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
               <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-x-0 top-[67%] z-10 flex items-center justify-center gap-3">
+                <div className={`absolute inset-x-0 z-10 flex items-center justify-center gap-3 ${lang === 'he' ? 'top-[62%]' : 'top-[67%]'}`}>
                   <a
                     href={config.navigationUrl}
                     target="_blank"
