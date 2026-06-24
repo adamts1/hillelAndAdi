@@ -24,8 +24,16 @@ const detectLang = () => {
   return langs.some((l) => l.toLowerCase().startsWith('he')) ? 'he' : 'en'
 }
 
+// Each language has its own shareable link via the ?lang= query param
+// (?lang=he / ?lang=en). Absent or unknown values fall back to browser locale.
+const getInitialLang = () => {
+  if (typeof window === 'undefined') return detectLang()
+  const q = (new URLSearchParams(window.location.search).get('lang') || '').toLowerCase()
+  return q === 'he' || q === 'en' ? q : detectLang()
+}
+
 export default function App() {
-  const [lang, setLang] = useState(detectLang)
+  const [lang, setLang] = useState(getInitialLang)
   const [switching, setSwitching] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [rsvpVisible, setRsvpVisible] = useState(false)
@@ -34,16 +42,26 @@ export default function App() {
 
   const config = translations[lang]
   const t = config.ui
+  // English has no hero cover, so its content is shown immediately.
+  const entered = showDetails || !config.hero
+  const showIntro = config.sections.includes('intro')
 
   // Cross-fade on language switch: fade the content out, swap language at
   // opacity 0 (so the RTL/LTR flip + image change isn't jarring), fade back in.
-  const toggleLang = () => {
+  // The active language is mirrored into the URL so it stays shareable.
+  const applyLang = (next) => {
     setSwitching(true)
     setTimeout(() => {
-      setLang((l) => (l === 'he' ? 'en' : 'he'))
+      setLang(next)
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        url.searchParams.set('lang', next)
+        window.history.replaceState({}, '', url)
+      }
       setSwitching(false)
     }, 260)
   }
+  const toggleLang = () => applyLang(lang === 'he' ? 'en' : 'he')
 
   // Paper-texture frame shown around (outside) each section's border.
   const frameBg = {
@@ -71,7 +89,7 @@ export default function App() {
 
   // Watch the RSVP section: hide the "scroll down" arrows once it comes into view.
   useEffect(() => {
-    if (!showDetails) return
+    if (!entered) return
     const el = rsvpRef.current
     if (!el) return
     const observer = new IntersectionObserver(
@@ -80,7 +98,7 @@ export default function App() {
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [showDetails])
+  }, [entered])
 
   // Custom slow smooth-scroll (native `smooth` speed isn't controllable).
   const slowScrollTo = (targetTop, duration = 1400) => {
@@ -189,7 +207,7 @@ export default function App() {
         className="mx-auto w-full max-w-[480px]"
         style={{ opacity: switching ? 0 : 1, transition: 'opacity 260ms ease' }}
       >
-        {!showDetails ? (
+        {config.hero && !showDetails ? (
           <section className="py-6 px-2.5" style={frameBg}>
             <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
               <img src={config.images.heroImg} alt="" fetchPriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
@@ -206,20 +224,22 @@ export default function App() {
           </section>
         ) : null}
 
-        {showDetails ? (
+        {entered ? (
           <>
-            {/* 2. Intro – floral wreath blessing, shown before the details. */}
-            <section id="intro" className="design7-enter py-6 px-2.5" style={frameBg}>
-              <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
-                <img src={config.images.introImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-            </section>
+            {/* 2. Intro – floral wreath blessing (Hebrew only). */}
+            {showIntro && (
+              <section id="intro" className="design7-enter py-6 px-2.5" style={frameBg}>
+                <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
+                  <img src={config.images.introImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                </div>
+              </section>
+            )}
 
             {/* 3. Details – navigation button overlaid below the venue address */}
             <section id="details" className="design7-enter py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
               <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-x-0 top-[62%] z-10 flex items-center justify-center gap-3">
+                <div className="absolute inset-x-0 top-[67%] z-10 flex items-center justify-center gap-3">
                   <a
                     href={config.navigationUrl}
                     target="_blank"
@@ -277,7 +297,7 @@ export default function App() {
       </div>
 
       {/* Scroll cue – nudges guests toward the RSVP until it's on screen. */}
-      {showDetails && !rsvpVisible && (
+      {entered && !rsvpVisible && (
         <button
           type="button"
           onClick={scrollToNextSection}

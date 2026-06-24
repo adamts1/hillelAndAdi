@@ -16,7 +16,6 @@ import detailsImg from './assets/details.webp'
 import rsvpImg from './assets/rsvp.webp'
 import bgImg from './assets/background.webp'
 // English artwork (PNGs converted to webp for fast loads)
-import heroEng from './assets/hero-eng.webp'
 import detailsEng from './assets/details-eng.webp'
 import rsvpEng from './assets/rsvp-eng.webp'
 
@@ -92,6 +91,9 @@ export const translations = {
       langToggle: '🇬🇧',
       langToggleAria: 'Switch to English',
     },
+    // Full Hebrew experience: a hero cover gate, then intro → details → rsvp.
+    hero: true,
+    sections: ['intro', 'details', 'rsvp'],
     images: { heroImg, introImg, detailsImg, rsvpImg, bgImg },
     rsvp: { ...shared.rsvpStyle, lang: 'he' },
   },
@@ -109,9 +111,10 @@ export const translations = {
       langToggle: '🇮🇱',
       langToggleAria: 'מעבר לעברית',
     },
-    // English artwork; intro has no English version yet, so it reuses the
-    // Hebrew floral blessing. Add intro-eng.webp + swap here to translate it.
-    images: { heroImg: heroEng, introImg, detailsImg: detailsEng, rsvpImg: rsvpEng, bgImg },
+    // English experience: no hero cover, no intro — only details → rsvp.
+    hero: false,
+    sections: ['details', 'rsvp'],
+    images: { detailsImg: detailsEng, rsvpImg: rsvpEng, bgImg },
     rsvp: { ...shared.rsvpStyle, labels: { ...enLabels, rsvp: '', intro: '' }, lang: 'en' },
   },
 }
