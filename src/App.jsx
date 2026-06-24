@@ -17,19 +17,14 @@ const RSVP = lazy(() => import('./components/RSVP'))
 
 const frameBorder = 'border-2 border-[#9C7C3C]/40'
 
-// Open in Hebrew for Hebrew-locale browsers, English for everyone else.
-const detectLang = () => {
-  if (typeof navigator === 'undefined') return defaultLang
-  const langs = navigator.languages || [navigator.language || '']
-  return langs.some((l) => l.toLowerCase().startsWith('he')) ? 'he' : 'en'
-}
-
 // Each language has its own shareable link via the ?lang= query param
-// (?lang=he / ?lang=en). Absent or unknown values fall back to browser locale.
+// (?lang=he / ?lang=en). Absent or unknown values open in Hebrew (the default) —
+// browser locale is intentionally ignored so guests with English-language phones
+// still land on the Hebrew invitation. English is reachable via ?lang=en or the toggle.
 const getInitialLang = () => {
-  if (typeof window === 'undefined') return detectLang()
+  if (typeof window === 'undefined') return defaultLang
   const q = (new URLSearchParams(window.location.search).get('lang') || '').toLowerCase()
-  return q === 'he' || q === 'en' ? q : detectLang()
+  return q === 'he' || q === 'en' ? q : defaultLang
 }
 
 export default function App() {
