@@ -234,19 +234,21 @@ export default function App() {
             <section id="details" className="design7-enter py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
               <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
                 <img src={config.images.detailsImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                <div className={`absolute inset-x-0 z-10 flex items-center justify-center gap-3 ${lang === 'he' ? 'top-[62%]' : 'top-[67%]'}`}>
-                  <a
-                    href={config.navigationUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={t.navAria}
-                    className="flex items-center justify-center w-11 h-11 rounded-full border-[3px] border-solid border-[#B1CAA7] bg-white/60 backdrop-blur-md text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
-                    </svg>
-                  </a>
-                </div>
+                {lang === 'he' && (
+                  <div className="absolute inset-x-0 z-10 flex items-center justify-center gap-3 top-[62%]">
+                    <a
+                      href={config.navigationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={t.navAria}
+                      className="flex items-center justify-center w-11 h-11 rounded-full border-[3px] border-solid border-[#B1CAA7] bg-white/60 backdrop-blur-md text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
               </div>
             </section>
 
