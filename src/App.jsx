@@ -17,14 +17,19 @@ const RSVP = lazy(() => import('./components/RSVP'))
 
 const frameBorder = 'border-2 border-[#9C7C3C]/40'
 
-// Each language has its own shareable link via the ?lang= query param
-// (?lang=he / ?lang=en). Absent or unknown values open in Hebrew (the default) —
+// Each language has its own shareable link. The English page lives at /en –
+// a separate prerendered HTML so its WhatsApp/Facebook preview is in English
+// (crawlers don't run JS, so the in-app toggle can't change the preview). The
+// ?lang= query param (?lang=he / ?lang=en) still works and takes precedence so
+// the toggle stays shareable. Absent/unknown values open in Hebrew (the default) –
 // browser locale is intentionally ignored so guests with English-language phones
-// still land on the Hebrew invitation. English is reachable via ?lang=en or the toggle.
+// still land on the Hebrew invitation.
 const getInitialLang = () => {
   if (typeof window === 'undefined') return defaultLang
   const q = (new URLSearchParams(window.location.search).get('lang') || '').toLowerCase()
-  return q === 'he' || q === 'en' ? q : defaultLang
+  if (q === 'he' || q === 'en') return q
+  if (/^\/en(\/|$)/.test(window.location.pathname)) return 'en'
+  return defaultLang
 }
 
 export default function App() {
